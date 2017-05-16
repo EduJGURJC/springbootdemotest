@@ -44,11 +44,8 @@ public class DemoTest {
 
 		driver.get("http://172.19.0.2:8080");
 		WebElement page1 = driver.findElementById("page1_button");
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		
+		sleep(5000);
 
 		page1.click();
 
@@ -87,9 +84,7 @@ public class DemoTest {
 //			while(!validUrl(url)){System.out.println("Waiting for loading noVNC client");}
 			System.out.println("urlvnc: "+ url);
 			
-			Thread.sleep(9000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			sleep(9000);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -97,14 +92,8 @@ public class DemoTest {
 	}
 
 	public void exitVnc(Process p) {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		finally{
-			p.destroy();	
-		}
+		sleep(2000);
+		p.destroy();	
 	}
 
 	public void writeFile(String path, String content) {
@@ -134,5 +123,14 @@ public class DemoTest {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    
+    public void sleep(int ms){
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
 }
