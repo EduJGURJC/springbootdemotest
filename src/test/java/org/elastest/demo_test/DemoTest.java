@@ -32,7 +32,7 @@ public class DemoTest {
 	public BrowserWebDriverContainer chrome = (BrowserWebDriverContainer) new BrowserWebDriverContainer()
 			.withDesiredCapabilities(DesiredCapabilities.chrome())
 //			.withRecordingMode(SKIP, null)
-			 .withRecordingMode(RECORD_ALL, new File("target"))
+			.withRecordingMode(RECORD_ALL, new File("target"))
 			.withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
 			.withNetworkMode("testnet");
 
@@ -44,6 +44,11 @@ public class DemoTest {
 
 		driver.get("http://172.19.0.2:8080");
 		WebElement page1 = driver.findElementById("page1_button");
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		page1.click();
 
