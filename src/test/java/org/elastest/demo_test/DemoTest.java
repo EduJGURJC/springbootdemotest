@@ -35,16 +35,19 @@ public class DemoTest {
 			.withDesiredCapabilities(DesiredCapabilities.chrome())
 //			.withRecordingMode(SKIP, null)
 			.withRecordingMode(RECORD_ALL, new File("target"))
-			.withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
+//			.withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
+//			.withEnv("APP_IP", "http://172.19.0.2:8080")
 			.withNetworkMode("testnet");
 
 	@Test
 	public void simplePlainSeleniumTest() {
-		RemoteWebDriver driver = chrome.getWebDriver();
 		ArrayList<String> envList = (ArrayList) chrome.getEnv();
-		System.out.println(envList);
+		String appIP = envList.get(1).replace("APP_IP=", "");
+		System.out.println("App ip: "+appIP);
+		
+		RemoteWebDriver driver = chrome.getWebDriver();		
 		Process p = runNoVncClient();
-		driver.get("http://172.19.0.2:8080");
+		driver.get(appIP);
 		WebElement page1 = driver.findElementById("page1_button");
 		
 		sleep(5000);
