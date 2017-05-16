@@ -43,6 +43,7 @@ public class DemoTest {
 	public void simplePlainSeleniumTest() {
 		ArrayList<String> envList = (ArrayList) chrome.getEnv();
 		String appIP = envList.get(1).replace("APP_IP=", "");
+		System.out.println("Evn list: "+envList);
 		System.out.println("App ip: "+appIP);
 		
 		RemoteWebDriver driver = chrome.getWebDriver();		
