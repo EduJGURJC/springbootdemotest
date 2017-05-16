@@ -9,6 +9,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 
 import java.awt.Desktop;
+import java.awt.List;
+import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,9 +41,9 @@ public class DemoTest {
 	@Test
 	public void simplePlainSeleniumTest() {
 		RemoteWebDriver driver = chrome.getWebDriver();
-
+		ArrayList<String> envList = (ArrayList) chrome.getEnv();
+		System.out.println(envList);
 		Process p = runNoVncClient();
-
 		driver.get("http://172.19.0.2:8080");
 		WebElement page1 = driver.findElementById("page1_button");
 		
