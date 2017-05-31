@@ -45,16 +45,17 @@ public class DemoTest {
 		
 		RemoteWebDriver driver = chrome.getWebDriver();		
 		Process p = runNoVncClient();
+		System.out.println("VNCRUNNING");
 		driver.get(appIP);
 		WebElement page1 = driver.findElementById("page1_button");
-		
+		System.out.println("sleep5000");
 		sleep(5000);
-
+		System.out.println("pageclick");
 		page1.click();
 
 
 		boolean expectedTextFound = driver.findElementById("content").findElement(By.cssSelector("span")).getText().contains("Page 1");
-
+		System.out.println("assert");
 		assertTrue("The word 'Page 1' is found on a page about Page 1", expectedTextFound);
 		exitVnc(p);
 	}
