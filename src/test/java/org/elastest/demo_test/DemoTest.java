@@ -31,8 +31,8 @@ public class DemoTest {
 	@Rule
 	public BrowserWebDriverContainer chrome = (BrowserWebDriverContainer) new BrowserWebDriverContainer()
 			.withDesiredCapabilities(DesiredCapabilities.chrome())
-//			.withRecordingMode(SKIP, null)
-			.withRecordingMode(RECORD_ALL, new File("target"))
+			.withRecordingMode(SKIP, null)
+//			.withRecordingMode(RECORD_ALL, new File("target"))
 //			.withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
 			.withEnv("DOCKER_HOST", System.getenv("DOCKER_HOST"))
 			.withNetworkMode(System.getenv("NETWORK"));
@@ -44,7 +44,7 @@ public class DemoTest {
 		System.out.println("App ip: "+appIP);
 		
 		RemoteWebDriver driver = chrome.getWebDriver();		
-		Process p = runNoVncClient();
+//		Process p = runNoVncClient();
 		driver.get(appIP);
 		WebElement page1 = driver.findElementById("page1_button");
 		
@@ -56,7 +56,7 @@ public class DemoTest {
 		boolean expectedTextFound = driver.findElementById("content").findElement(By.cssSelector("span")).getText().contains("Page 1");
 
 		assertTrue("The word 'Page 1' is found on a page about Page 1", expectedTextFound);
-		exitVnc(p);
+//		exitVnc(p);
 	}
 
 	public String getVncIp() {
