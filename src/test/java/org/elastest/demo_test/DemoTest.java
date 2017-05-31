@@ -45,7 +45,6 @@ public class DemoTest {
 		
 		RemoteWebDriver driver = chrome.getWebDriver();		
 		Process p = runNoVncClient();
-		System.out.println("VNCRUNNING");
 		driver.get(appIP);
 		WebElement page1 = driver.findElementById("page1_button");
 		
