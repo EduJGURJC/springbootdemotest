@@ -9,7 +9,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 
 import java.awt.Desktop;
-import java.awt.List;
 import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,7 +18,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.ProcessBuilder.Redirect;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
@@ -37,7 +35,7 @@ public class DemoTest {
 			.withRecordingMode(RECORD_ALL, new File("target"))
 //			.withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
 			.withEnv("DOCKER_HOST", System.getenv("DOCKER_HOST"))
-			.withNetworkMode("testnet");
+			.withNetworkMode(System.getenv("NETWORK"));
 
 	@Test
 	public void simplePlainSeleniumTest() {
