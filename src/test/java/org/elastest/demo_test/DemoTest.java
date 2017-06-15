@@ -30,34 +30,32 @@ public class DemoTest {
 
 	@Rule
 	public BrowserWebDriverContainer chrome = (BrowserWebDriverContainer) new BrowserWebDriverContainer()
-			.withDesiredCapabilities(DesiredCapabilities.chrome())
-			.withRecordingMode(SKIP, null)
-//			.withRecordingMode(RECORD_ALL, new File("target"))
-//			.withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
-			.withEnv("DOCKER_HOST", System.getenv("DOCKER_HOST"))
-			.withNetworkMode(System.getenv("NETWORK"));
+			.withDesiredCapabilities(DesiredCapabilities.chrome()).withRecordingMode(SKIP, null)
+			// .withRecordingMode(RECORD_ALL, new File("target"))
+			// .withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
+			.withEnv("DOCKER_HOST", System.getenv("DOCKER_HOST")).withNetworkMode(System.getenv("NETWORK"));
 
 	@Test
 	public void simplePlainSeleniumTest() {
 		ArrayList<String> envList = (ArrayList) chrome.getEnv();
 		String appIP = System.getenv("APP_IP");
-		System.out.println("App ip: "+appIP);
-		
-		RemoteWebDriver driver = chrome.getWebDriver();		
-//		Process p = runNoVncClient();
-//		System.out.println("VNCRUNNING");
-		driver.get(appIP);
+		System.out.println("App ip: " + appIP);
+
+		RemoteWebDriver driver = chrome.getWebDriver();
+		// Process p = runNoVncClient();
+		// System.out.println("VNCRUNNING");
+		driver.get("http://" + appIP);
 		WebElement page1 = driver.findElementById("page1_button");
 		System.out.println("sleep5000");
 		sleep(5000);
 		System.out.println("pageclick");
 		page1.click();
 
-
-		boolean expectedTextFound = driver.findElementById("content").findElement(By.cssSelector("span")).getText().contains("Page 1");
+		boolean expectedTextFound = driver.findElementById("content").findElement(By.cssSelector("span")).getText()
+				.contains("Page 1");
 		System.out.println("assert");
 		assertTrue("The word 'Page 1' is found on a page about Page 1", expectedTextFound);
-//		exitVnc(p);
+		// exitVnc(p);
 	}
 
 	public String getVncIp() {
@@ -78,16 +76,18 @@ public class DemoTest {
 			pb.redirectError(Redirect.INHERIT);
 			p = pb.start();
 
-			String url = "http://localhost:6080/vnc.html?host=localhost&port=6080&resize=scale&autoconnect=true&password=" + pass;
+			String url = "http://localhost:6080/vnc.html?host=localhost&port=6080&resize=scale&autoconnect=true&password="
+					+ pass;
 			try {
 				Desktop.getDesktop().browse(new URL(url).toURI());
 			} catch (Exception e) {
-//				e.printStackTrace();
-			}		
-			
-//			while(!validUrl(url)){System.out.println("Waiting for loading noVNC client");}
-			System.out.println("urlvnc: "+ url);
-			
+				// e.printStackTrace();
+			}
+
+			// while(!validUrl(url)){System.out.println("Waiting for loading
+			// noVNC client");}
+			System.out.println("urlvnc: " + url);
+
 			sleep(9000);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -97,7 +97,7 @@ public class DemoTest {
 
 	public void exitVnc(Process p) {
 		sleep(2000);
-		p.destroy();	
+		p.destroy();
 	}
 
 	public void writeFile(String path, String content) {
@@ -106,35 +106,33 @@ public class DemoTest {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "utf-8"));
 			writer.write(content);
 		} catch (IOException e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 		} finally {
 			try {
 				writer.close();
 			} catch (Exception e) {
-//				e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 	}
-	
-    public static boolean validUrl(String URLName){
-        try {
-            HttpURLConnection.setFollowRedirects(false);
-            HttpURLConnection con =  (HttpURLConnection) new URL(URLName).openConnection();
-            con.setRequestMethod("HEAD");
-            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
-    
-    public void sleep(int ms){
+
+	public static boolean validUrl(String URLName) {
+		try {
+			HttpURLConnection.setFollowRedirects(false);
+			HttpURLConnection con = (HttpURLConnection) new URL(URLName).openConnection();
+			con.setRequestMethod("HEAD");
+			return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void sleep(int ms) {
 		try {
 			Thread.sleep(ms);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }
