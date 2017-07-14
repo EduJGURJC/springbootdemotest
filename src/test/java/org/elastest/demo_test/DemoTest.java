@@ -48,8 +48,8 @@ public class DemoTest {
 //		System.out.println("VNCRUNNING");
 		driver.get(appIP);
 		WebElement page1 = driver.findElementById("page1_button");
-		System.out.println("sleep5000");
-		sleep(5000);
+		System.out.println("sleep3000");
+		sleep(3000);
 		System.out.println("pageclick");
 		page1.click();
 
