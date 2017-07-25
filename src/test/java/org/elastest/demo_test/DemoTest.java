@@ -32,7 +32,7 @@ public class DemoTest {
 	public BrowserWebDriverContainer chrome = (BrowserWebDriverContainer) new BrowserWebDriverContainer()
 			.withDesiredCapabilities(DesiredCapabilities.chrome()).withRecordingMode(SKIP, null)
 			// .withRecordingMode(RECORD_ALL, new File("target"))
-			 .withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
+			// .withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
 //			.withNetworkMode(System.getenv("NETWORK"))
 			.withEnv("DOCKER_HOST", System.getenv("DOCKER_HOST"));
 
