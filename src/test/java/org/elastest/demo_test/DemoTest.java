@@ -1,33 +1,17 @@
 package org.elastest.demo_test;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testcontainers.containers.BrowserWebDriverContainer;
 
-import java.awt.Desktop;
-import java.util.ArrayList;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.lang.ProcessBuilder.Redirect;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.Capabilities;
 import static org.openqa.selenium.remote.DesiredCapabilities.chrome;
 import static java.lang.System.getenv;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
-import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode.*;
 
 /**
  * Simple example of plain Selenium usage.
@@ -45,9 +29,6 @@ public class DemoTest {
             }
             System.out.println("Using EUS URL " + driverUrl);
             driver = new RemoteWebDriver(new URL(driverUrl), capabilities);
-
-            System.out
-                    .println("Docker Env ip: " + System.getenv("DOCKER_HOST"));
 
             String appIP = System.getenv("APP_IP");
             System.out.println("App ip: " + appIP);
