@@ -3,6 +3,7 @@ package org.elastest.demo_test;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,7 +19,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.ProcessBuilder.Redirect;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.Capabilities;
+import static org.openqa.selenium.remote.DesiredCapabilities.chrome;
+import static java.lang.System.getenv;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
 import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode.*;
@@ -27,115 +33,67 @@ import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordi
  * Simple example of plain Selenium usage.
  */
 public class DemoTest {
+    RemoteWebDriver driver;
 
-	@Rule
-	public BrowserWebDriverContainer chrome = (BrowserWebDriverContainer) new BrowserWebDriverContainer()
-			.withDesiredCapabilities(DesiredCapabilities.chrome()).withRecordingMode(SKIP, null)
-			// .withRecordingMode(RECORD_ALL, new File("target"))
-			// .withEnv("DOCKER_HOST", "tcp://172.17.0.1:2376")
-//			.withNetworkMode(System.getenv("NETWORK"))
-			.withEnv("DOCKER_HOST", System.getenv("DOCKER_HOST"));
+    @BeforeEach
+    void setup() throws MalformedURLException {
+        Capabilities capabilities = chrome();
+        String driverUrl = getenv("ET_EUS_API");
+        if (driverUrl == null) {
+            driverUrl = "http://172.21.0.10:8040/eus/v1/";
+        }
+        System.out.println("Using EUS URL " + driverUrl);
+        driver = new RemoteWebDriver(new URL(driverUrl), capabilities);
+    }
 
-	@Test
-	public void simplePlainSeleniumTest() {
-		System.out.println("Docker Env ip: " + System.getenv("DOCKER_HOST"));
+    @Test
+    public void simplePlainSeleniumTest() {
+        try {
 
-		ArrayList<String> envList = (ArrayList) chrome.getEnv();
-		String appIP = System.getenv("APP_IP");
-		System.out.println("App ip: " + appIP);
+            System.out
+                    .println("Docker Env ip: " + System.getenv("DOCKER_HOST"));
 
-		RemoteWebDriver driver = chrome.getWebDriver();
-		// Process p = runNoVncClient();
-		// System.out.println("VNCRUNNING");
-		driver.get(appIP);
-		WebElement page1 = driver.findElementById("page1_button");
-		System.out.println("sleep 2000");
-		sleep(2000);
-		System.out.println("pageclick");
-		page1.click();
+            String appIP = System.getenv("APP_IP");
+            System.out.println("App ip: " + appIP);
 
-		boolean expectedTextFound = driver.findElementById("content").findElement(By.cssSelector("span")).getText()
-				.contains("Page 1");
-		System.out.println("assert");
-		assertTrue("The word 'Page 1' is found on a page about Page 1", expectedTextFound);
-		// exitVnc(p);
-	}
+            driver.get(appIP);
 
-	public String getVncIp() {
-		String[] vncAddress = chrome.getVncAddress().split("@");
-		return vncAddress[1];
-	}
+            WebElement page1 = driver.findElementById("page1_button");
+            System.out.println("sleep 2000");
+            sleep(2000);
+            System.out.println("pageclick");
+            page1.click();
 
-	public Process runNoVncClient() {
-		Process p = null;
-		String vncIp = getVncIp();
-		String pass = chrome.getPassword();
+            boolean expectedTextFound = driver.findElementById("content")
+                    .findElement(By.cssSelector("span")).getText()
+                    .contains("Page 1");
+            System.out.println("assert");
+            assertTrue("The word 'Page 1' is found on a page about Page 1",
+                    expectedTextFound);
+            driver.quit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		try {
-			ProcessBuilder pb = new ProcessBuilder("/bin/bash",
-					System.getProperty("user.dir") + "/noVNC/utils/launch.sh", "--vnc", vncIp);
+    public static boolean validUrl(String URLName) {
+        try {
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection con = (HttpURLConnection) new URL(URLName)
+                    .openConnection();
+            con.setRequestMethod("HEAD");
+            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-			pb.redirectOutput(Redirect.INHERIT);
-			pb.redirectError(Redirect.INHERIT);
-			p = pb.start();
-
-			String url = "http://localhost:6080/vnc.html?host=localhost&port=6080&resize=scale&autoconnect=true&password="
-					+ pass;
-			try {
-				Desktop.getDesktop().browse(new URL(url).toURI());
-			} catch (Exception e) {
-				// e.printStackTrace();
-			}
-
-			// while(!validUrl(url)){System.out.println("Waiting for loading
-			// noVNC client");}
-			System.out.println("urlvnc: " + url);
-
-			sleep(9000);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return p;
-	}
-
-	public void exitVnc(Process p) {
-		sleep(2000);
-		p.destroy();
-	}
-
-	public void writeFile(String path, String content) {
-		Writer writer = null;
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "utf-8"));
-			writer.write(content);
-		} catch (IOException e) {
-			// e.printStackTrace();
-		} finally {
-			try {
-				writer.close();
-			} catch (Exception e) {
-				// e.printStackTrace();
-			}
-		}
-	}
-
-	public static boolean validUrl(String URLName) {
-		try {
-			HttpURLConnection.setFollowRedirects(false);
-			HttpURLConnection con = (HttpURLConnection) new URL(URLName).openConnection();
-			con.setRequestMethod("HEAD");
-			return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public void sleep(int ms) {
-		try {
-			Thread.sleep(ms);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+    public void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
