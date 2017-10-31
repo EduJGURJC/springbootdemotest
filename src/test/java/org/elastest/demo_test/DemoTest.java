@@ -3,12 +3,11 @@ package org.elastest.demo_test;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.openqa.selenium.Capabilities;
-import static org.openqa.selenium.remote.DesiredCapabilities.chrome;
 import static java.lang.System.getenv;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
@@ -22,15 +21,17 @@ public class DemoTest {
     @Test
     public void simplePlainSeleniumTest() {
         try {
-            Capabilities capabilities = chrome();
             String driverUrl = getenv("ET_EUS_API");
             if (driverUrl == null) {
-                driverUrl = "http://172.21.0.10:8040/eus/v1/";
+                driverUrl = "http://172.27.0.12:8040/eus/v1/";
             }
             System.out.println("Using EUS URL " + driverUrl);
-            driver = new RemoteWebDriver(new URL(driverUrl), capabilities);
+            driver = new RemoteWebDriver(new URL(driverUrl), DesiredCapabilities.chrome());
 
             String appIP = System.getenv("APP_IP");
+            if(appIP == null){
+                appIP = "http://172.17.0.6:8080";
+            }
             System.out.println("App ip: " + appIP);
 
             driver.get(appIP);
