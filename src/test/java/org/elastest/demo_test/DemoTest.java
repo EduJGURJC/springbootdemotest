@@ -35,20 +35,16 @@ import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordi
 public class DemoTest {
     RemoteWebDriver driver;
 
-    @BeforeEach
-    void setup() throws MalformedURLException {
-        Capabilities capabilities = chrome();
-        String driverUrl = getenv("ET_EUS_API");
-        if (driverUrl == null) {
-            driverUrl = "http://172.21.0.10:8040/eus/v1/";
-        }
-        System.out.println("Using EUS URL " + driverUrl);
-        driver = new RemoteWebDriver(new URL(driverUrl), capabilities);
-    }
-
     @Test
     public void simplePlainSeleniumTest() {
         try {
+            Capabilities capabilities = chrome();
+            String driverUrl = getenv("ET_EUS_API");
+            if (driverUrl == null) {
+                driverUrl = "http://172.21.0.10:8040/eus/v1/";
+            }
+            System.out.println("Using EUS URL " + driverUrl);
+            driver = new RemoteWebDriver(new URL(driverUrl), capabilities);
 
             System.out
                     .println("Docker Env ip: " + System.getenv("DOCKER_HOST"));
