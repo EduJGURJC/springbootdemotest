@@ -28,7 +28,7 @@ public class DemoTest {
             System.out.println("Using EUS URL " + driverUrl);
             driver = new RemoteWebDriver(new URL(driverUrl), DesiredCapabilities.chrome());
 
-            String appIP = System.getenv("APP_IP");
+            String appIP = System.getenv("ET_SUT_HOST");
             if(appIP == null){
                 appIP = "http://172.17.0.6:8080";
             }
